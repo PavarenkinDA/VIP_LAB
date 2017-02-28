@@ -26,7 +26,7 @@ public class MainGenerator {
     }
 
     private static void addTables(final Schema schema) {
-        Entity menu = addMenu(schema);
+        Entity flex = addFlex(schema);
 
         Entity user = addUser(schema);
         Entity repo = addRepo(schema);
@@ -37,8 +37,8 @@ public class MainGenerator {
         user.addToMany(repo, userId, "userRepos");
     }
 
-    private static Entity addMenu(final Schema schema) {
-        Entity entity = schema.addEntity("Menu");
+    private static Entity addFlex(final Schema schema) {
+        Entity entity = schema.addEntity("Flex");
         entity.addIdProperty().primaryKey().autoincrement();
         entity.addIntProperty("kind").notNull();
         entity.addIntProperty("icon").notNull();

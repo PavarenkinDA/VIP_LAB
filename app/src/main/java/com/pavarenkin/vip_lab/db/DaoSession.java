@@ -8,13 +8,13 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
-import com.pavarenkin.vip_lab.db.Menu;
+import com.pavarenkin.vip_lab.db.Flex;
 import com.pavarenkin.vip_lab.db.User;
 import com.pavarenkin.vip_lab.db.Repo;
 import com.pavarenkin.vip_lab.db.Note;
 import com.pavarenkin.vip_lab.db.Post;
 
-import com.pavarenkin.vip_lab.db.MenuDao;
+import com.pavarenkin.vip_lab.db.FlexDao;
 import com.pavarenkin.vip_lab.db.UserDao;
 import com.pavarenkin.vip_lab.db.RepoDao;
 import com.pavarenkin.vip_lab.db.NoteDao;
@@ -29,13 +29,13 @@ import com.pavarenkin.vip_lab.db.PostDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
-    private final DaoConfig menuDaoConfig;
+    private final DaoConfig flexDaoConfig;
     private final DaoConfig userDaoConfig;
     private final DaoConfig repoDaoConfig;
     private final DaoConfig noteDaoConfig;
     private final DaoConfig postDaoConfig;
 
-    private final MenuDao menuDao;
+    private final FlexDao flexDao;
     private final UserDao userDao;
     private final RepoDao repoDao;
     private final NoteDao noteDao;
@@ -45,8 +45,8 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
-        menuDaoConfig = daoConfigMap.get(MenuDao.class).clone();
-        menuDaoConfig.initIdentityScope(type);
+        flexDaoConfig = daoConfigMap.get(FlexDao.class).clone();
+        flexDaoConfig.initIdentityScope(type);
 
         userDaoConfig = daoConfigMap.get(UserDao.class).clone();
         userDaoConfig.initIdentityScope(type);
@@ -60,13 +60,13 @@ public class DaoSession extends AbstractDaoSession {
         postDaoConfig = daoConfigMap.get(PostDao.class).clone();
         postDaoConfig.initIdentityScope(type);
 
-        menuDao = new MenuDao(menuDaoConfig, this);
+        flexDao = new FlexDao(flexDaoConfig, this);
         userDao = new UserDao(userDaoConfig, this);
         repoDao = new RepoDao(repoDaoConfig, this);
         noteDao = new NoteDao(noteDaoConfig, this);
         postDao = new PostDao(postDaoConfig, this);
 
-        registerDao(Menu.class, menuDao);
+        registerDao(Flex.class, flexDao);
         registerDao(User.class, userDao);
         registerDao(Repo.class, repoDao);
         registerDao(Note.class, noteDao);
@@ -74,15 +74,15 @@ public class DaoSession extends AbstractDaoSession {
     }
     
     public void clear() {
-        menuDaoConfig.clearIdentityScope();
+        flexDaoConfig.clearIdentityScope();
         userDaoConfig.clearIdentityScope();
         repoDaoConfig.clearIdentityScope();
         noteDaoConfig.clearIdentityScope();
         postDaoConfig.clearIdentityScope();
     }
 
-    public MenuDao getMenuDao() {
-        return menuDao;
+    public FlexDao getFlexDao() {
+        return flexDao;
     }
 
     public UserDao getUserDao() {

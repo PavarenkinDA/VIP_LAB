@@ -21,7 +21,7 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
-        MenuDao.createTable(db, ifNotExists);
+        FlexDao.createTable(db, ifNotExists);
         UserDao.createTable(db, ifNotExists);
         RepoDao.createTable(db, ifNotExists);
         NoteDao.createTable(db, ifNotExists);
@@ -30,7 +30,7 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
-        MenuDao.dropTable(db, ifExists);
+        FlexDao.dropTable(db, ifExists);
         UserDao.dropTable(db, ifExists);
         RepoDao.dropTable(db, ifExists);
         NoteDao.dropTable(db, ifExists);
@@ -53,7 +53,7 @@ public class DaoMaster extends AbstractDaoMaster {
 
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
-        registerDaoClass(MenuDao.class);
+        registerDaoClass(FlexDao.class);
         registerDaoClass(UserDao.class);
         registerDaoClass(RepoDao.class);
         registerDaoClass(NoteDao.class);

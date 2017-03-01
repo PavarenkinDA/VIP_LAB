@@ -17,11 +17,8 @@ import com.jakewharton.rxbinding.widget.TextViewAfterTextChangeEvent;
 import com.pavarenkin.vip_lab.R;
 import com.pavarenkin.vip_lab.app.VIPApplication;
 import com.pavarenkin.vip_lab.db.DaoSession;
-import com.pavarenkin.vip_lab.db.Note;
-import com.pavarenkin.vip_lab.db.NoteDao;
 import com.pavarenkin.vip_lab.db.Post;
 import com.pavarenkin.vip_lab.domain.DaoAdapter;
-import com.pavarenkin.vip_lab.domain.enums.NoteType;
 
 import org.greenrobot.greendao.rx.RxDao;
 import org.greenrobot.greendao.rx.RxQuery;
@@ -46,8 +43,8 @@ public class TestActivity extends AppCompatActivity {
     Button buttonAdd;
     Post post;
 
-    private RxDao<Note, Long> noteDao;
-    private RxQuery<Note> notesQuery;
+    private RxDao<Post, Long> noteDao;
+    private RxQuery<Post> notesQuery;
     private DaoAdapter notesAdapter;
 
 
@@ -78,104 +75,104 @@ public class TestActivity extends AppCompatActivity {
             }
         });
 
-        buttonAdd = (Button) findViewById(R.id.button2);
-        buttonAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addNote();
-            }
-        });
-
-        setUpViews();
-
-        // get the Rx variant of the note DAO
-        DaoSession daoSession = ((VIPApplication) getApplication()).getDaoSession();
-        noteDao = daoSession.getNoteDao().rx();
-
-        // query all notes, sorted a-z by their text
-        notesQuery = daoSession.getNoteDao().queryBuilder().orderAsc(NoteDao.Properties.Text).rx();
-        updateNotes();
+//        buttonAdd = (Button) findViewById(R.id.button2);
+//        buttonAdd.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                addNote();
+//            }
+//        });
+//
+//        setUpViews();
+//
+//        // get the Rx variant of the note DAO
+//        DaoSession daoSession = ((VIPApplication) getApplication()).getDaoSession();
+//        noteDao = daoSession.getNoteDao().rx();
+//
+//        // query all notes, sorted a-z by their text
+//        notesQuery = daoSession.getNoteDao().queryBuilder().orderAsc(NoteDao.Properties.Text).rx();
+//        updateNotes();
 
     }
 
-    private void updateNotes() {
-        notesQuery.list()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Note>>() {
-                    @Override
-                    public void call(List<Note> notes) {
-                        notesAdapter.setNotes(notes);
-                    }
-                });
-    }
+//    private void updateNotes() {
+//        notesQuery.list()
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<List<Note>>() {
+//                    @Override
+//                    public void call(List<Note> notes) {
+//                        notesAdapter.setNotes(notes);
+//                    }
+//                });
+//    }
 
     protected void setUpViews() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerViewNotes);
         //noinspection ConstantConditions
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        notesAdapter = new DaoAdapter(noteClickListener);
-        recyclerView.setAdapter(notesAdapter);
-
-        editText = (EditText) findViewById(R.id.editTextNote);
-        //noinspection ConstantConditions
-        RxTextView.editorActions(editText).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Integer>() {
-                    @Override
-                    public void call(Integer actionId) {
-                        if (actionId == EditorInfo.IME_ACTION_DONE) {
-                            addNote();
-                        }
-                    }
-                });
-        RxTextView.afterTextChangeEvents(editText).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<TextViewAfterTextChangeEvent>() {
-                    @Override
-                    public void call(TextViewAfterTextChangeEvent textViewAfterTextChangeEvent) {
-                        boolean enable = textViewAfterTextChangeEvent.editable().length() > 0;
-                        buttonAdd.setEnabled(enable);
-                    }
-                });
+//
+//        notesAdapter = new DaoAdapter(noteClickListener);
+//        recyclerView.setAdapter(notesAdapter);
+//
+//        editText = (EditText) findViewById(R.id.editTextNote);
+//        //noinspection ConstantConditions
+//        RxTextView.editorActions(editText).observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<Integer>() {
+//                    @Override
+//                    public void call(Integer actionId) {
+//                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+//                            addNote();
+//                        }
+//                    }
+//                });
+//        RxTextView.afterTextChangeEvents(editText).observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<TextViewAfterTextChangeEvent>() {
+//                    @Override
+//                    public void call(TextViewAfterTextChangeEvent textViewAfterTextChangeEvent) {
+//                        boolean enable = textViewAfterTextChangeEvent.editable().length() > 0;
+//                        buttonAdd.setEnabled(enable);
+//                    }
+//                });
     }
-
-    private void addNote() {
-        String noteText = editText.getText().toString();
-        editText.setText("");
-
-        final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
-        String comment = "Added on " + df.format(new Date());
-
-        Note note = new Note(null, noteText, comment, new Date(), NoteType.TEXT);
-        noteDao.insert(note)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Note>() {
-                    @Override
-                    public void call(Note note) {
-                        Log.d("DaoExample", "Inserted new note, ID: " + note.getId());
-                        updateNotes();
-                    }
-                });
-    }
-
-    DaoAdapter.NoteClickListener noteClickListener = new DaoAdapter.NoteClickListener() {
-        @Override
-        public void onNoteClick(int position) {
-            Note note = notesAdapter.getNote(position);
-            final Long noteId = note.getId();
-
-            noteDao.deleteByKey(noteId)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<Void>() {
-                        @Override
-                        public void call(Void aVoid) {
-                            Log.d("DaoExample", "Deleted note, ID: " + noteId);
-                            updateNotes();
-                        }
-                    });
-        }
-    };
-
+//
+//    private void addNote() {
+//        String noteText = editText.getText().toString();
+//        editText.setText("");
+//
+//        final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
+//        String comment = "Added on " + df.format(new Date());
+//
+//        Note note = new Note(null, noteText, comment, new Date(), NoteType.TEXT);
+//        noteDao.insert(note)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<Note>() {
+//                    @Override
+//                    public void call(Note note) {
+//                        Log.d("DaoExample", "Inserted new note, ID: " + note.getId());
+//                        updateNotes();
+//                    }
+//                });
+//    }
+//
+//    DaoAdapter.NoteClickListener noteClickListener = new DaoAdapter.NoteClickListener() {
+//        @Override
+//        public void onNoteClick(int position) {
+//            Note note = notesAdapter.getNote(position);
+//            final Long noteId = note.getId();
+//
+//            noteDao.deleteByKey(noteId)
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(new Action1<Void>() {
+//                        @Override
+//                        public void call(Void aVoid) {
+//                            Log.d("DaoExample", "Deleted note, ID: " + noteId);
+//                            updateNotes();
+//                        }
+//                    });
+//        }
+//    };
+//
 
 
     private void caller() {

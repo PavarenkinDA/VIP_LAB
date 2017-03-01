@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.pavarenkin.vip_lab.R;
-import com.pavarenkin.vip_lab.db.Note;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
 public class DaoAdapter extends RecyclerView.Adapter<DaoAdapter.NoteViewHolder> {
 
     private NoteClickListener clickListener;
-    private List<Note> dataset;
+//    private List<Note> dataset;
 
     public interface NoteClickListener {
         void onNoteClick(int position);
@@ -44,18 +43,18 @@ public class DaoAdapter extends RecyclerView.Adapter<DaoAdapter.NoteViewHolder> 
 
     public DaoAdapter(NoteClickListener clickListener) {
         this.clickListener = clickListener;
-        this.dataset = new ArrayList<Note>();
+//        this.dataset = new ArrayList<Note>();
     }
 
-    public void setNotes(@NonNull List<Note> notes) {
-        dataset = notes;
-        notifyDataSetChanged();
-    }
-
-    public Note getNote(int position) {
-        return dataset.get(position);
-    }
-
+//    public void setNotes(@NonNull List<Note> notes) {
+//        dataset = notes;
+//        notifyDataSetChanged();
+//    }
+//
+//    public Note getNote(int position) {
+//        return dataset.get(position);
+//    }
+//
     @Override
     public DaoAdapter.NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -65,13 +64,13 @@ public class DaoAdapter extends RecyclerView.Adapter<DaoAdapter.NoteViewHolder> 
 
     @Override
     public void onBindViewHolder(DaoAdapter.NoteViewHolder holder, int position) {
-        Note note = dataset.get(position);
-        holder.text.setText(note.getText());
-        holder.comment.setText(note.getComment());
+//        Note note = dataset.get(position);
+//        holder.text.setText(note.getText());
+//        holder.comment.setText(note.getComment());
     }
 
     @Override
     public int getItemCount() {
-        return dataset.size();
+        return 0; //dataset.size();
     }
 }

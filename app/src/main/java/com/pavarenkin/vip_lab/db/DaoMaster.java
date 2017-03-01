@@ -21,19 +21,21 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
+        FlexPictureDao.createTable(db, ifNotExists);
         FlexDao.createTable(db, ifNotExists);
+        FlexStateDao.createTable(db, ifNotExists);
         UserDao.createTable(db, ifNotExists);
         RepoDao.createTable(db, ifNotExists);
-        NoteDao.createTable(db, ifNotExists);
         PostDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
+        FlexPictureDao.dropTable(db, ifExists);
         FlexDao.dropTable(db, ifExists);
+        FlexStateDao.dropTable(db, ifExists);
         UserDao.dropTable(db, ifExists);
         RepoDao.dropTable(db, ifExists);
-        NoteDao.dropTable(db, ifExists);
         PostDao.dropTable(db, ifExists);
     }
 
@@ -53,10 +55,11 @@ public class DaoMaster extends AbstractDaoMaster {
 
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
+        registerDaoClass(FlexPictureDao.class);
         registerDaoClass(FlexDao.class);
+        registerDaoClass(FlexStateDao.class);
         registerDaoClass(UserDao.class);
         registerDaoClass(RepoDao.class);
-        registerDaoClass(NoteDao.class);
         registerDaoClass(PostDao.class);
     }
 
